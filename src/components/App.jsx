@@ -4,6 +4,10 @@ import { ContactForm } from './ContactForm/ContactForm';
 import { Filter } from './Filter/Filter';
 import { ContactList } from './ContactList/ContactList';
 import Notiflix from 'notiflix';
+
+
+
+
 export class App extends Component {
   state = {
     contacts: [
@@ -15,7 +19,23 @@ export class App extends Component {
     filter: '',
   };
 
-  
+  componentDidMount() {
+    const contactsFromLocalStorage = localStorage.getItem('contactList');
+    const parsedContacts = JSON.parse(contactsFromLocalStorage);
+
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts });
+    }
+  }
+
+  componentDidUpdate(_, prevState) {
+    const prevStateContacts = prevState.contacts;
+    const nextStayContacts = this.state.contacts;
+
+    if (prevStateContacts !== nextStayContacts) {
+      localStorage.setItem('contactList', JSON.stringify(nextStayContacts));
+    }
+  }
 
   handleSubmit = ({ name, number }) => {
     const contact = {
